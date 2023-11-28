@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, flash
+from flask import Flask, render_template, request, redirect, flash, session
 from surveys import satisfaction_survey
 
 responses = []
@@ -14,13 +14,18 @@ def home():
                            instructions=satisfaction_survey.instructions)
 
 
+@app.route('/start')
+def start_survey():
+    session['responses'] = []
+    print('redirecting to first question ')
+    return redirect('/questions/0')
 @app.route('/questions/<int:question_id>')
 def display_question(question_id):
+    print('SESSION IS', session)
     # Check if the question is actually the next question
-    if question_id != len(responses):
-
-        flash("Hey! Don't mess with the order of the questions!")
-        return redirect(f'/questions/{len(responses)}')
+    if question_id != len(session['responses']):
+        flash(f"Hey! Don't mess with the order of the questions! {question_id} {len(session['responses'])}")
+        return redirect(f"/questions/{len(session['responses'])}")
 
     # Select the actual question
     selected_question = satisfaction_survey.questions[question_id]
@@ -33,9 +38,12 @@ def display_question(question_id):
 
 @app.route('/answer', methods=['POST'])
 def record_answer():
+    responses = session['responses']
     responses.append(request.form['answer'])
-    if len(responses) < len(satisfaction_survey.questions):
-        return redirect(f'/questions/{len(responses)}')
+    session['responses'] = responses
+    print('session is now', session['responses'])
+    if len(session['responses']) < len(satisfaction_survey.questions):
+        return redirect(f"/questions/{len(session['responses'])}")
     else:
         return redirect(f'/thank-you')
 
