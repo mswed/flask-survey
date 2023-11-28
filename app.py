@@ -1,9 +1,10 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, flash
 from surveys import satisfaction_survey
 
 responses = []
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'Do not tell anyone'
 
 
 @app.route('/')
@@ -15,6 +16,13 @@ def home():
 
 @app.route('/questions/<int:question_id>')
 def display_question(question_id):
+    # Check if the question is actually the next question
+    if question_id != len(responses):
+
+        flash("Hey! Don't mess with the order of the questions!")
+        return redirect(f'/questions/{len(responses)}')
+
+    # Select the actual question
     selected_question = satisfaction_survey.questions[question_id]
     question = selected_question.question
     answers = selected_question.choices
