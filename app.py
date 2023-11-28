@@ -22,8 +22,17 @@ def display_question(question_id):
     return render_template('question.html', title=satisfaction_survey.title,
                            question=question, answers=answers)
 
+
 @app.route('/answer', methods=['POST'])
 def record_answer():
     responses.append(request.form['answer'])
+    if len(responses) < len(satisfaction_survey.questions):
+        return redirect(f'/questions/{len(responses)}')
+    else:
+        return redirect(f'/thank-you')
 
-    return redirect(f'/questions/{len(responses)}')
+
+@app.route('/thank-you')
+def thank_you():
+    return render_template('thank-you.html')
+
