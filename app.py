@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect
 from surveys import satisfaction_survey
 
 responses = []
@@ -24,5 +24,6 @@ def display_question(question_id):
 
 @app.route('/answer', methods=['POST'])
 def record_answer():
+    responses.append(request.form['answer'])
 
-    return 'Ok then?'
+    return redirect(f'/questions/{len(responses)}')
