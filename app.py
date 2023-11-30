@@ -1,8 +1,6 @@
 from flask import Flask, render_template, request, redirect, flash, session
 from surveys import satisfaction_survey
 
-responses = []
-
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'Do not tell anyone'
 
@@ -17,15 +15,19 @@ def home():
 @app.route('/start')
 def start_survey():
     session['responses'] = []
-    print('redirecting to first question ')
     return redirect('/questions/0')
 @app.route('/questions/<int:question_id>')
 def display_question(question_id):
-    print('SESSION IS', session)
-    # Check if the question is actually the next question
-    if question_id != len(session['responses']):
-        flash(f"Hey! Don't mess with the order of the questions! {question_id} {len(session['responses'])}")
-        return redirect(f"/questions/{len(session['responses'])}")
+
+    try:
+        # Check if the question is actually the next question
+        if question_id != len(session['responses']):
+            flash(f"Hey! Don't mess with the order of the questions!")
+            return redirect(f"/questions/{len(session['responses'])}")
+    except KeyError:
+        session['responses'] = []
+        return redirect(f"/questions/0")
+
 
     # Select the actual question
     selected_question = satisfaction_survey.questions[question_id]
