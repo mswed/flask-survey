@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, flash, session
+from flask import Flask, render_template, request, redirect, flash, session, make_response
 from surveys import satisfaction_survey, surveys
 
 app = Flask(__name__)
@@ -38,6 +38,10 @@ def start_survey():
     """
     # Clear previous survey answers
     session['responses'] = []
+    survey = surveys.get(session['selected_survey'])
+    if request.cookies.get(survey.title):
+        flash('Whoops! Looks like you already completed this survey!')
+        return redirect('/')
 
     return redirect('/questions/0')
 
@@ -89,5 +93,10 @@ def record_answer():
 def thank_you():
     survey = surveys.get(session['selected_survey'])
     questions = [q.question for q in survey.questions]
-    return render_template('thank-you.html', questions=questions, answers=session['responses'])
+    response = make_response(render_template('thank-you.html',
+                                             questions=questions,
+                                             answers=session['responses']))
+    response.set_cookie(survey.title, 'completed')
+
+    return response
 
