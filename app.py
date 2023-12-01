@@ -63,19 +63,17 @@ def display_question(question_id):
 
     # Select the actual question
     selected_question = survey.questions[question_id]
-    question = selected_question.question
-    answers = selected_question.choices
 
     return render_template('question.html', title=satisfaction_survey.title,
-                           question=question, answers=answers)
+                           question= selected_question.question, answers=selected_question.choices,
+                           allow_text=selected_question.allow_text)
 
 
 @app.route('/answer', methods=['POST'])
 def record_answer():
     responses = session['responses']
-    responses.append(request.form['answer'])
+    responses.append({'choice': request.form['answer'], 'text': request.form.get('answer-text')})
     session['responses'] = responses
-    print('session is now', session['responses'])
     if len(session['responses']) < len(satisfaction_survey.questions):
         return redirect(f"/questions/{len(session['responses'])}")
     else:

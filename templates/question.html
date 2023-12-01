@@ -12,6 +12,12 @@
         {% endfor %}
     </div>
 
+    {% if allow_text %}
+    <div>
+        <textarea id="answer-text" name="answer-text" rows="4" cols="50"></textarea>
+    </div>
+    {% endif %}
+
     <button>Next Question</button>
 
 </form>
