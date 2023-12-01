@@ -1,23 +1,52 @@
 from flask import Flask, render_template, request, redirect, flash, session
-from surveys import satisfaction_survey
+from surveys import satisfaction_survey, surveys
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'Do not tell anyone'
 
-
 @app.route('/')
 def home():
-    return render_template('home.html',
-                           title=satisfaction_survey.title,
-                           instructions=satisfaction_survey.instructions)
+    """
+    Go to home page displaying a selection of surveys
+    @return: Response
+    """
 
+    session['survey_names'] = [name for name in surveys.keys()]
+
+    return render_template('home.html')
+
+
+@app.route('/intro')
+def show_intro():
+    """
+    Intro to the selected survey including survey title and instructions
+    @return: Response
+    """
+    session['selected_survey'] = request.args['selected-survey']
+    survey = surveys.get(session['selected_survey'])
+
+    return render_template('intro.html',
+                           title=survey.title,
+                           instructions=survey.instructions)
 
 @app.route('/start')
 def start_survey():
+    """
+    Initialize a survey
+    @return:
+    """
+    # Clear previous survey answers
     session['responses'] = []
+
     return redirect('/questions/0')
+
 @app.route('/questions/<int:question_id>')
 def display_question(question_id):
+    """
+    Display a question and possible answers
+    @param question_id: int, question number
+    @return: Response
+    """
 
     try:
         # Check if the question is actually the next question
@@ -25,12 +54,15 @@ def display_question(question_id):
             flash(f"Hey! Don't mess with the order of the questions!")
             return redirect(f"/questions/{len(session['responses'])}")
     except KeyError:
+        # The user tried to access a question directly before the starting the survey
         session['responses'] = []
-        return redirect(f"/questions/0")
+        return redirect("/")
 
+    # Select the survey object
+    survey = surveys.get(session['selected_survey'])
 
     # Select the actual question
-    selected_question = satisfaction_survey.questions[question_id]
+    selected_question = survey.questions[question_id]
     question = selected_question.question
     answers = selected_question.choices
 

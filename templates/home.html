@@ -2,10 +2,17 @@
 {% block title %} Home {% endblock %}
 {% block content %}
 
-<form action="/start" class="question">
-    <h1>{{title}}</h1>
-    <p>{{instructions}}</p>
-    <button>Start Survey</button>
+<form action="/intro" class="question">
+    <h1>Select a Survey</h1>
+    <label for="selected-survey">Survey Name:</label>
+
+    <select name="selected-survey" id="selected-survey">
+        {% for survey in session['survey_names'] %}
+        <option value="{{survey}}">{{survey}}</option>
+
+        {% endfor %}
+    </select>
+    <button>Select Survey</button>
 </form>
 
 {% endblock %}}
