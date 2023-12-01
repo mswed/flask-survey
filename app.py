@@ -95,7 +95,8 @@ def thank_you():
     questions = [q.question for q in survey.questions]
     response = make_response(render_template('thank-you.html',
                                              questions=questions,
-                                             answers=session['responses']))
+                                             answers=session['responses'],
+                                             title=survey.title))
     response.set_cookie(survey.title, 'completed')
 
     return response

@@ -1,22 +1,22 @@
-body {
-    display: flex;
-    flex-direction: column;
-}
-h1 {
-    margin-bottom: 0px;
-}
+/*body {*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*}*/
+/*h1 {*/
+/*    margin-bottom: 0px;*/
+/*}*/
 
-button {
-    margin-top: 20px;
-}
+/*button {*/
+/*    margin-top: 20px;*/
+/*}*/
 
-.question {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 50px;
-}
+/*.question {*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    align-items: center;*/
+/*    margin: 50px;*/
+/*}*/
 
-.answers {
-    flex-direction: row;
-}
+/*.answers {*/
+/*    flex-direction: row;*/
+/*}*/

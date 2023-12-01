@@ -2,8 +2,8 @@
 {% block title %} Home {% endblock %}
 {% block content %}
 
-<form action="/answer" method="POST" class="question">
-    <h1>{{title}}</h1>
+<form action="/answer" method="POST" class="col-12 bg-body-secondary text-center pb-3">
+    <h1 class="bg-primary text-light">{{title}}</h1>
     <h2>{{question}}</h2>
     <div class="answers">
         {% for answer in answers %}

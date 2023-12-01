@@ -2,13 +2,19 @@
 {% block title %} Home {% endblock %}
 {% block content %}
 
-<h1 class="question">THANK YOU!</h1>
-<h2>Here are your answers:</h2>
-<ol>
-    {% for q in questions %}
-    <li><span><b>{{q}}</b></span> - <span>{{answers[loop.index0]['choice']}} {{answers[loop.index0]['text']}}</span></li>
-    {% endfor %}
-</ol>
+<div class="col-12 bg-body-secondary text-center pb-3">
+    <h1 class="bg-primary text-light">{{title}}</h1>
+    <h1 class="question">THANK YOU!</h1>
+    <h2>Here are your answers:</h2>
+
+    <ol class="list-inline justify-content-center">
+        {% for q in questions %}
+        <li><span><b>{{q}}</b></span> - <span>{{answers[loop.index0]['choice']}} {{answers[loop.index0]['text']}}</span></li>
+        {% endfor %}
+    </ol>
+
+</div>
+
 
 
 {% endblock %}}

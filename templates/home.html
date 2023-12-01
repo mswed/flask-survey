@@ -2,16 +2,19 @@
 {% block title %} Home {% endblock %}
 {% block content %}
 
-<form action="/intro" class="question">
-    <h1>Select a Survey</h1>
-    <label for="selected-survey">Survey Name:</label>
+<form action="/intro" class="col-12 bg-body-secondary text-center">
+    <h1 class="bg-primary text-light">Select a Survey</h1>
 
-    <select name="selected-survey" id="selected-survey">
-        {% for survey in session['survey_names'] %}
-        <option value="{{survey}}">{{survey}}</option>
+    <div class="form-group my-3">
+        <label for="selected-survey">Survey Name:</label>
 
-        {% endfor %}
-    </select>
+        <select name="selected-survey" id="selected-survey">
+            {% for survey in session['survey_names'] %}
+            <option value="{{survey}}">{{survey}}</option>
+            {% endfor %}
+        </select>
+    </div>
+
     <button>Select Survey</button>
 </form>
 
