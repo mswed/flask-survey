@@ -3,6 +3,7 @@ from surveys import satisfaction_survey, surveys
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'Do not tell anyone'
+app.jinja_env.globals.update(zip=zip)
 
 @app.route('/')
 def home():
@@ -71,10 +72,14 @@ def display_question(question_id):
 
 @app.route('/answer', methods=['POST'])
 def record_answer():
+    survey = surveys.get(session['selected_survey'])
     responses = session['responses']
-    responses.append({'choice': request.form['answer'], 'text': request.form.get('answer-text')})
+    responses.append({'choice': request.form['answer'], 'text': request.form.get('answer-text', '')})
     session['responses'] = responses
-    if len(session['responses']) < len(satisfaction_survey.questions):
+    print('*' * 20)
+    print(session['responses'])
+    print('*' * 20)
+    if len(session['responses']) < len(survey.questions):
         return redirect(f"/questions/{len(session['responses'])}")
     else:
         return redirect(f'/thank-you')
@@ -82,5 +87,7 @@ def record_answer():
 
 @app.route('/thank-you')
 def thank_you():
-    return render_template('thank-you.html')
+    survey = surveys.get(session['selected_survey'])
+    questions = [q.question for q in survey.questions]
+    return render_template('thank-you.html', questions=questions, answers=session['responses'])
 

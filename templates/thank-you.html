@@ -3,5 +3,11 @@
 {% block content %}
 
 <h1 class="question">THANK YOU!</h1>
+<ol>
+    {% for q in questions %}
+    <li><span><b>{{q}}</b></span> - <span>{{answers[loop.index0]['choice']}} {{answers[loop.index0]['text']}}</span></li>
+    {% endfor %}
+</ol>
+
 
 {% endblock %}}
